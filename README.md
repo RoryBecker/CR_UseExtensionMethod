@@ -28,5 +28,7 @@ In cases where a namespace (N) is present...
     P.E();
 
 However a using\imports directive will also be added to the code file.
+
+	using N;
+
 This addition may cause the importing of additional classes and methods which might change the meaning of some code. For this reason, this version of the functionality is made available through a CodeProvider rather than a Refactoring.
-****

@@ -153,18 +153,18 @@ namespace CR_UseExtensionMethod
         private void ConvertToExtensionMethodCall(LanguageElement element)
         {
             MethodReferenceExpression methodReference = element as MethodReferenceExpression;
-            MethodCall methodCall = methodReference.Parent as MethodCall;
-            SourceRange methodCallRange = methodCall.Range; //Range to overwrite with new code
+            LanguageElement Parent = methodReference.Parent;
+            SourceRange methodCallRange = methodReference.Parent.Range; //Range to overwrite with new code
 
             ElementReferenceExpression classReference = methodReference.Nodes[0] as ElementReferenceExpression;
             SourceRange classReferenceRange = classReference.Range;
 
-            var firstParam = methodCall.Arguments[0];
-            methodCall.Arguments.Remove(firstParam);
+            var firstParam = ((IHasArguments)Parent).Arguments[0];
+            ((IHasArguments)Parent).Arguments.Remove(firstParam);
 
             //Rewrite MethodCall
             TextDocument ActiveDoc = CodeRush.Documents.ActiveTextDocument;
-            ActiveDoc.QueueReplace(methodCallRange, CodeRush.Language.GenerateElement(methodCall));
+            ActiveDoc.QueueReplace(methodCallRange, CodeRush.Language.GenerateElement(Parent));
 
             // Overwrite ClassQualifier with FirstParam
             ActiveDoc.QueueReplace(classReferenceRange, CodeRush.Language.GenerateElement(firstParam));
